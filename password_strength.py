@@ -35,51 +35,6 @@ def strength_label(score):
         return "Very Strong"
     
 
-# def estimate_crack_time(password):
-    charset = 0
-
-    if re.search(r"[a-z]", password):
-        charset += 26
-    if re.search(r"[A-Z]", password):
-        charset += 26
-    if re.search(r"[0-9]", password):
-        charset += 10
-    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        charset += 32
-
-    length = len(password)
-
-    combinations = charset ** length
-
-    guesses_per_second = 1e12  # assume strong GPU attack
-
-    seconds = combinations / guesses_per_second
-
-    return seconds
-
-
-# import cupy as cp
-# def estimate_crack_time(password, guesses_per_second=None):
-    charset = 0
-    if re.search(r"[a-z]", password): charset += 26
-    if re.search(r"[A-Z]", password): charset += 26
-    if re.search(r"[0-9]", password): charset += 10
-    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password): charset += 32
-
-    length = len(password)
-    if charset == 0 or length == 0:
-        return 0
-
-    # GPU accelerated exponentiation
-    combinations = cp.power(charset, length).get()
-
-    # if no benchmark provided, default to 1e9
-    if guesses_per_second is None:
-        guesses_per_second = 1e9
-
-    return combinations / guesses_per_second
-
-
 def estimate_crack_time(password, guesses_per_second=1e12):
     charset = 0
 
@@ -121,13 +76,6 @@ def format_time(seconds):
     else:
         return f"{seconds/31536000:.2f} years"
 
-# def is_common(password):
-    try:
-        with open("rockyou.txt", "r", encoding="latin-1") as f:
-            common = f.read().splitlines()
-        return password in common
-    except:
-        return False
 
 def is_common(password, filepath="rockyou.txt"):
     try:
